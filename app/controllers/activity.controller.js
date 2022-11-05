@@ -6,11 +6,7 @@ const Activity = db.activity;
 const findAll = async (req, res) => {
   const activities = await Activity.findAll();
 
-  return res.status(200).json({
-    status: "Success",
-    message: "Success",
-    data: activities,
-  });
+  return exportToJSON(res, 200, "Success", "Success", activities);
 };
 
 const findOne = async (req, res) => {
@@ -19,27 +15,26 @@ const findOne = async (req, res) => {
 
   if (!activity) {
     return exportToJSON(
+      res,
       404,
       "Not Found",
       `Activity with ID ${id} Not Found`,
-      activity
+      {}
     );
   }
 
-  return res.status(200).json({
-    status: "Success",
-    message: "Success",
-    data: activity,
-  });
+  return exportToJSON(res, 200, "Success", "Success", activity);
 };
 
 const create = async (req, res) => {
   const title = req.body.title;
   const email = req.body.email;
 
-  if (title === "") {
-    return exportToJSON(400, "Baq Request", "title cannot be null", {});
-  }
+  if (!title || title === "")
+    return exportToJSON(res, 400, "Baq Request", "title cannot be null", {});
+
+  if (!email || email === "")
+    return exportToJSON(res, 400, "Baq Request", "email cannot be null", {});
 
   const data = {
     title: title,
@@ -47,7 +42,7 @@ const create = async (req, res) => {
   };
   const activity = await Activity.create(data);
 
-  return exportToJSON(201, "Success", "Success", activity);
+  return exportToJSON(res, 201, "Success", "Success", activity);
 };
 
 const update = async (req, res) => {
@@ -56,19 +51,20 @@ const update = async (req, res) => {
 
   if (!activity) {
     return exportToJSON(
+      res,
       404,
       "Not Found",
       `Activity with ID ${id} Not Found`,
-      activity
+      {}
     );
   }
 
   const title = req.body.title;
   const email = req.body.email;
 
-  if (title === "") {
-    return exportToJSON(400, "Baq Request", "title cannot be null", {});
-  }
+  if (!title || title === "")
+    return exportToJSON(res, 400, "Baq Request", "title cannot be null", {});
+
 
   const data = {
     title: title,
@@ -80,10 +76,15 @@ const update = async (req, res) => {
       return Activity.findByPk(id);
     })
     .then((activity) => {
-      return exportToJSON(200, "Success", "Success", activity);
+      return exportToJSON(res, 200, "Success", "Success", activity);
     })
     .catch(() => {
-      return exportToJSON(500, "Internal Server Error", "Something went wrong");
+      return exportToJSON(
+        res,
+        500,
+        "Internal Server Error",
+        "Something went wrong"
+      );
     });
 };
 
@@ -93,16 +94,17 @@ const destroy = async (req, res) => {
 
   if (!activity) {
     return exportToJSON(
+      res,
       404,
       "Not Found",
       `Activity with ID ${id} Not Found`,
-      activity
+      {}
     );
   }
 
   await Activity.destroy({ where: { id: id } });
 
-  return exportToJSON(200, "Success", "Success", {});
+  return exportToJSON(res, 200, "Success", "Success", {});
 };
 
 module.exports = { findAll, findOne, create, update, destroy };

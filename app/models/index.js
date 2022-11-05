@@ -1,5 +1,15 @@
 const dbConfig = require("../config/db.config");
+const mysql = require("mysql2");
 const { Sequelize, DataTypes } = require("sequelize");
+
+const connection = mysql.createConnection({
+  host: dbConfig.HOST,
+  port: dbConfig.PORT,
+  user: dbConfig.USER,
+  password: dbConfig.password,
+});
+connection.connect();
+connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbConfig.DB}\`;`);
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,

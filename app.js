@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const url = process.env.APP_URL;
 const port = process.env.APP_PORT || 3030;
+const routes = require("./app/routes");
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.send("Skyshi Digital Indonesia Backend Node JS");
 });
+app.use(routes);
 
 app.listen(port, () => console.log(`Server is running on ${url}:${port}`));
