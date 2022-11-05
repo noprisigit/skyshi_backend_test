@@ -1,10 +1,18 @@
 module.exports = (sequelize, DataTypes) => {
-  const Activity = sequelize.define("activity_groups", {
-    email: {
-      type: DataTypes.STRING,
+  const Todo = sequelize.define("todos", {
+    activity_group_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    is_active: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    priority: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -24,5 +32,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  return Activity;
-};
+  return Todo;
+}
