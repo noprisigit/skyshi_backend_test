@@ -22,7 +22,7 @@ const findOne = async (req, res) => {
       {}
     );
   }
-
+   
   return exportToJSON(res, 200, "Success", "Success", activity);
 };
 
@@ -30,16 +30,19 @@ const create = async (req, res) => {
   const title = req.body.title;
   const email = req.body.email;
 
-  if (!title || title === "")
+  if (!title || title === "") {
     return exportToJSON(res, 400, "Baq Request", "title cannot be null", {});
+  }
 
-  if (!email || email === "")
+  if (!email || email === "") {
     return exportToJSON(res, 400, "Baq Request", "email cannot be null", {});
+  }
 
   const data = {
     title: title,
     email: email,
   };
+
   const activity = await Activity.create(data);
 
   return exportToJSON(res, 201, "Success", "Success", activity);
@@ -62,9 +65,9 @@ const update = async (req, res) => {
   const title = req.body.title;
   const email = req.body.email;
 
-  if (!title || title === "")
+  if (!title || title === "") {
     return exportToJSON(res, 400, "Baq Request", "title cannot be null", {});
-
+  }
 
   const data = {
     title: title,
