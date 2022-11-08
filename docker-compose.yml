@@ -1,0 +1,46 @@
+version: "3.2"
+services:
+  nodejs:
+    build: 
+      context: .
+    image: noprisigit/skyshi-backend-test
+    networks:
+      - frontend
+      - backend
+    environment:
+      - MYSQL_HOST=noprisigit-mysql-app
+      - MYSQL_USER=root
+      - MYSQL_PASS=root
+      - MYSQL_DB=skyshi_backend_test
+    volumes:
+      - ./www/:/var/www/html/
+    ports:
+      - "3030:3030"
+    container_name: noprisigit-nodejs-app
+  mysql:
+    image: mysql:latest
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root 
+      - MYSQL_DATABASE=moe_db
+    container_name: noprisigit-mysql-app
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - "30002:80"
+    environment:
+      - PMA_HOST=noprisigit-mysql-app
+      - PMA_PORT= 3306
+    volumes:
+      - /sessions
+    container_name: noprisigit-phpmyadmin-app
+networks:
+  frontend:
+  backend:

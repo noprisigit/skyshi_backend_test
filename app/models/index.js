@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
   host: dbConfig.HOST,
   port: dbConfig.PORT,
   user: dbConfig.USER,
-  password: dbConfig.password,
+  password: dbConfig.PASSWORD,
 });
 connection.connect();
 connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbConfig.DB}\`;`);

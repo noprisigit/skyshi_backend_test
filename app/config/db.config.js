@@ -1,11 +1,17 @@
 require("dotenv").config();
 
+const mysqlHost = process.env.MYSQL_HOST || 'localhost';
+const mysqlPort = process.env.MYSQL_PORT || 3306;
+const mysqlUser = process.env.MYSQL_USER || 'root';
+const mysqlPassword = process.env.MYSQL_PASS || '';
+const mysqlDbName = process.env.MYSQL_DB || 'skyshi_backend_test';
+
 module.exports = {
-  HOST: process.env.DB_HOST,
-  USER: process.env.DB_USER,
-  PASSWORD: process.env.DB_PASSWORD,
-  DB: process.env.DB_NAME,
-  PORT: process.env.DB_PORT,
+  HOST: mysqlHost,  
+  USER: mysqlUser,
+  PASSWORD: mysqlPassword,
+  DB: mysqlDbName,
+  PORT: mysqlPort,
   dialect: "mysql",
 
   pool: {
