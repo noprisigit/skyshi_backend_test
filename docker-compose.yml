@@ -2,37 +2,48 @@ version: '3.8'
 
 services:
   mysqldb:
-    image: mysql:latest
+    image: mysql:5.7
+    container_name: mysqlcontainer
+    command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
-    expose:
-      - "3306"
-    env_file: ./.env
-    environment:
-      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - MYSQL_DATABASE=$MYSQLDB_DATABASE
-      - MYSQL_ALLOW_EMPTY_PASSWORD=ok
-    ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
     volumes:
-      - db:/var/lib/mysql
-  app:
+      - ./dbinit/init.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - $HOME/database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      MYSQL_DATABASE: skyshi_backend_test
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      SERVICE_NAME: mysqldb
+    networks:
+      - internalnet
+    
+  nodeapp:
+    container_name: nodeappcontainer
+    build: .
+    image: nodeapp
+    volumes:
+      - $HOME/nodeapp:/code
+    ports:
+      - 3030:3030
+    expose:
+      - 3030
+    environment:
+      DB_HOST: mysqldb
+      DB_PORT: 3306
+      DB_USER: 'root'
+      DB_PASSWORD: 
+      DB_NAME: skyshi_backend_test
+      SERVICE_NAME: nodeappservice
+      PORT: 3030
     depends_on:
       - mysqldb
-    build: ./skyshi-app
-    restart: unless-stopped
-    env_file: ./.env
-    command: bash -c 'while !</dev/tcp/mysqldb/3306; do sleep 1; done; npm start'
-    ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
-    environment:
-      - DB_HOST:mysqldb
-      - DB_USER:$MYSQLDB_USER
-      - DB_PASSWORD:$MYSQLDB_ROOT_PASSWORD
-      - DB_NAME:$MYSQLDB_DATABASE
-      - DB_PORT:$MYSQLDB_DOCKER_PORT
-    stdin_open: true
-    tty: true
-
-volumes:
-  db:
-  
+    networks:
+      - internalnet
+networks:
+  internalnet:
+    driver: bridge
