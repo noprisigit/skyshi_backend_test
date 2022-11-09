@@ -31,11 +31,11 @@ const create = async (req, res) => {
   const email = req.body.email;
 
   if (!title || title === "") {
-    return exportToJSON(res, 400, "Baq Request", "title cannot be null", {});
+    return exportToJSON(res, 400, "Bad Request", "title cannot be null", {});
   }
 
   if (!email || email === "") {
-    return exportToJSON(res, 400, "Baq Request", "email cannot be null", {});
+    return exportToJSON(res, 400, "Bad Request", "email cannot be null", {});
   }
 
   const data = {

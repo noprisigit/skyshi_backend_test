@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Activity = sequelize.define(
-    "activity_groups",
+    "activities",
     {
       email: {
         type: DataTypes.STRING,
